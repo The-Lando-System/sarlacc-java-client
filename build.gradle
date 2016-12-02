@@ -8,6 +8,8 @@ repositories {
 dependencies {
     compile 'org.slf4j:slf4j-api:1.7.21'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.1.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-core', version: '4.2.0.RELEASE'
+
     compile group: 'commons-codec', name: 'commons-codec', version: '1.2'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
 }
