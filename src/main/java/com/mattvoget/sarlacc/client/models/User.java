@@ -15,6 +15,7 @@ public class User implements UserDetails {
 	private String firstName;
 	private String lastName;
 	private String email;
+	private Role role;
 
 	public String getId() {
 		return id;
@@ -58,6 +59,14 @@ public class User implements UserDetails {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 	@Override
