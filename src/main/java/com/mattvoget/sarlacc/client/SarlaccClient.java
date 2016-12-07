@@ -1,8 +1,9 @@
 package com.mattvoget.sarlacc.client;
 
 import com.mattvoget.sarlacc.client.exceptions.SarlaccClientException;
-import com.mattvoget.sarlacc.client.models.Token;
-import com.mattvoget.sarlacc.client.models.User;
+
+import com.mattvoget.sarlacc.models.Token;
+import com.mattvoget.sarlacc.models.User;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.*;

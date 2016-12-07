@@ -3,6 +3,9 @@ apply plugin: 'idea'
 
 repositories {
     mavenCentral()
+    flatDir {
+        dirs '../local-repo/'
+    }
 }
 
 dependencies {
@@ -14,6 +17,8 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     compile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
+
+    compile name: 'sarlacc-model/sarlacc-model-1.0'
 
 }
 

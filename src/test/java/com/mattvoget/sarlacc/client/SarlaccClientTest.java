@@ -2,8 +2,8 @@ package com.mattvoget.sarlacc.client;
 
 
 import com.mattvoget.sarlacc.client.exceptions.SarlaccClientException;
-import com.mattvoget.sarlacc.client.models.Token;
-import com.mattvoget.sarlacc.client.models.User;
+import com.mattvoget.sarlacc.models.Token;
+import com.mattvoget.sarlacc.models.User;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpEntity;
