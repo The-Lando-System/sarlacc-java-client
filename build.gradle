@@ -3,9 +3,9 @@ apply plugin: 'idea'
 
 repositories {
     mavenCentral()
-    flatDir {
-        dirs '../local-repo/'
-    }
+//    flatDir {
+//        dirs '../local-repo/'
+//    }
     maven { url 'https://jitpack.io' }
 }
 
@@ -32,12 +32,12 @@ jar {
     }
 }
 
-uploadArchives {
-    repositories {
-        flatDir {
-            dirs '../local-repo/sarlacc-java-client'
-        }
-    }
-}
+//uploadArchives {
+//    repositories {
+//        flatDir {
+//            dirs '../local-repo/sarlacc-java-client'
+//        }
+//    }
+//}
 
 
