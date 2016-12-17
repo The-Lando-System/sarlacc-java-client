@@ -407,7 +407,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/unresolved dependency -  sarlacc-java-client/sarlacc-model-1.0"/>
+          <root url="file://$MODULE_DIR$/unresolved dependency - com.github.The-Lando-System sarlacc-model 1.0"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES/>

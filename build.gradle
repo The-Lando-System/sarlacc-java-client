@@ -6,6 +6,7 @@ repositories {
     flatDir {
         dirs '../local-repo/'
     }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -18,8 +19,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
 
-    compile name: 'sarlacc-model/sarlacc-model-1.0'
-
+    compile 'com.github.The-Lando-System:sarlacc-model:-SNAPSHOT'
 }
 
 version = '1.0'
