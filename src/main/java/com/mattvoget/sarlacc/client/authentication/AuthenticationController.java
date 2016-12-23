@@ -1,5 +1,6 @@
 package com.mattvoget.sarlacc.client.authentication;
 
+import com.mattvoget.sarlacc.models.Token;
 import com.mattvoget.sarlacc.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,14 +20,14 @@ public class AuthenticationController {
 
     @RequestMapping(value="/login", method= RequestMethod.POST)
     @ResponseBody
-    public String login() {
+    public Token login() {
         User user = securityHelper.getUser();
-        String accessToken = user.getToken().getAccessToken();
+        Token token = user.getToken();
 
         log.info(String.format("User %s has logged in!",user.getUsername()));
-        log.info(String.format("Returning access token: %s",accessToken));
+        log.info(String.format("Returning access token: %s",token.getAccessToken()));
 
-        return accessToken;
+        return token;
     }
 
     @RequestMapping(value="/logout", method= RequestMethod.POST)
