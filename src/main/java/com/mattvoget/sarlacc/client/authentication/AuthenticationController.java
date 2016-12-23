@@ -20,14 +20,10 @@ public class AuthenticationController {
 
     @RequestMapping(value="/login", method= RequestMethod.POST)
     @ResponseBody
-    public Token login() {
+    public User login() {
         User user = securityHelper.getUser();
-        Token token = user.getToken();
-
         log.info(String.format("User %s has logged in!",user.getUsername()));
-        log.info(String.format("Returning access token: %s",token.getAccessToken()));
-
-        return token;
+        return user;
     }
 
     @RequestMapping(value="/logout", method= RequestMethod.POST)
