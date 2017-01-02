@@ -1,7 +1,5 @@
 package com.mattvoget.sarlacc.client;
 
-
-import com.mattvoget.sarlacc.client.exceptions.SarlaccClientException;
 import com.mattvoget.sarlacc.models.Token;
 import com.mattvoget.sarlacc.models.User;
 import org.junit.Test;
@@ -33,22 +31,22 @@ public class SarlaccClientTest {
         assertEquals(USER_URL,client.getUserUrl());
     }
 
-    @Test (expected = SarlaccClientException.class)
+    @Test (expected = IllegalArgumentException.class)
     public void createBadClientNoClientId(){
         SarlaccClient client = new SarlaccClient(null,CLIENT_SECRET,TOKEN_URL,USER_URL);
     }
 
-    @Test (expected = SarlaccClientException.class)
+    @Test (expected = IllegalArgumentException.class)
     public void createBadClientNoClientSecret(){
         SarlaccClient client = new SarlaccClient(CLIENT_ID,null,TOKEN_URL,USER_URL);
     }
 
-    @Test (expected = SarlaccClientException.class)
+    @Test (expected = IllegalArgumentException.class)
     public void createBadClientNoTokenUrl(){
         SarlaccClient client = new SarlaccClient(CLIENT_ID,CLIENT_SECRET,null,USER_URL);
     }
 
-    @Test (expected = SarlaccClientException.class)
+    @Test (expected = IllegalArgumentException.class)
     public void createBadClientNoUserUrl(){
         SarlaccClient client = new SarlaccClient(CLIENT_ID,CLIENT_SECRET,TOKEN_URL,null);
     }

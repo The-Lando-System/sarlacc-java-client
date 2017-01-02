@@ -1,15 +1,18 @@
 package com.mattvoget.sarlacc.client;
 
-import com.mattvoget.sarlacc.client.exceptions.SarlaccClientException;
 
 import com.mattvoget.sarlacc.models.Token;
 import com.mattvoget.sarlacc.models.User;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 public class SarlaccClient {
+
+    private Logger log = LoggerFactory.getLogger(SarlaccClient.class);
 
     private String clientId;
     private String clientSecret;
@@ -32,9 +35,10 @@ public class SarlaccClient {
     }
 
     void validateClientInput(String str, String varName){
+        log.debug(String.format("Validating client inputs: %s, %s", str, varName));
         String msg = "Failed to initialize a Sarlacc Client! Reason: %s";
         if (StringUtils.isBlank(str)){
-            throw new SarlaccClientException(String.format(msg,String.format("Received no input for the following variable: %s", varName)));
+            throw new IllegalArgumentException(String.format(msg,String.format("Received no input for the following variable: %s", varName)));
         }
     }
 
@@ -89,7 +93,9 @@ public class SarlaccClient {
 
         HttpEntity<String> entity = new HttpEntity(requestBody,headers);
 
-        return (Token) sendRequest(restTemplate,getTokenUrl(),HttpMethod.POST,entity,Token.class);
+        log.debug(String.format("Sending request to get a user token: url=%s",  getTokenUrl()));
+
+        return (Token) sendRequest(restTemplate, getTokenUrl(), HttpMethod.POST, entity, Token.class);
     }
 
     public User getUserDetails(Token token){
@@ -100,7 +106,9 @@ public class SarlaccClient {
 
         HttpEntity<String> entity = new HttpEntity("parameters", headers);
 
-        return (User) sendRequest(restTemplate,getUserUrl(),HttpMethod.GET, entity, User.class);
+        log.debug(String.format("Sending request to get user details: url=%s",  getUserUrl()));
+
+        return (User) sendRequest(restTemplate, getUserUrl(),HttpMethod.GET, entity, User.class);
     }
 
     String base64Encode(String strToEncode){

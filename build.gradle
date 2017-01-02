@@ -16,10 +16,14 @@ dependencies {
     compile group: 'commons-codec', name: 'commons-codec', version: '1.2'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
 
+    compile group: 'com.google.guava', name: 'guava', version: '19.0'
+
+    compile 'com.github.The-Lando-System:sarlacc-model:-SNAPSHOT'
+
     testCompile 'junit:junit:4.12'
     compile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
 
-    compile 'com.github.The-Lando-System:sarlacc-model:-SNAPSHOT'
+
 }
 
 version = '1.0'
