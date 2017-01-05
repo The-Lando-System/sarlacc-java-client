@@ -7,6 +7,7 @@ import com.mattvoget.sarlacc.models.Token;
 import com.mattvoget.sarlacc.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.concurrent.ExecutionException;
@@ -48,9 +49,14 @@ public class SarlaccUserService {
                         try {
                             user = client.getUserDetails(token);
                         } catch (HttpClientErrorException hcee){
-                            String message = "Unable to connect to the Sarlacc to get user information";
-                            log.debug(message);
-                            throw new SarlaccServerException(message, hcee);
+                            if (hcee.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                                String message = "Invalid x-access-token header provided in the request";
+                                throw new SarlaccUserException(message);
+                            } else {
+                                String message = "Unable to connect to the Sarlacc to get user information";
+                                log.debug(message);
+                                throw new SarlaccServerException(message, hcee);
+                            }
                         } catch (Exception e){
                             String message = "Invalid x-access-token header provided in the request";
                             log.debug(message);
