@@ -91,7 +91,7 @@ public class SarlaccClient {
 
         String requestBody = String.format("username=%s&password=%s&grant_type=%s",username,password,grantType);
 
-        HttpEntity<String> entity = new HttpEntity(requestBody,headers);
+        HttpEntity<String> entity = new HttpEntity<String>(requestBody,headers);
 
         log.debug(String.format("Sending request to get a user token: url=%s",  getTokenUrl()));
 
@@ -104,7 +104,7 @@ public class SarlaccClient {
 
         setAuthHeader(headers, "Bearer", token.getAccessToken());
 
-        HttpEntity<String> entity = new HttpEntity("parameters", headers);
+        HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 
         log.debug(String.format("Sending request to get user details: url=%s",  getUserUrl()));
 
@@ -123,7 +123,7 @@ public class SarlaccClient {
         headers.set("Content-Type", contentType);
     }
 
-    Object sendRequest(RestTemplate restTemplate, String url, HttpMethod methodType, HttpEntity entity, Class clazz){
+    Object sendRequest(RestTemplate restTemplate, String url, HttpMethod methodType, HttpEntity<String> entity, Class<?> clazz){
         ResponseEntity<?> re = restTemplate.exchange(url, methodType, entity, clazz);
         return re.getBody();
     }

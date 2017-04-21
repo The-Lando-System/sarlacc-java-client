@@ -13,6 +13,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import javax.management.relation.Role;
+
 
 public class SarlaccUserService {
 
@@ -46,6 +48,7 @@ public class SarlaccUserService {
 
                         SarlaccClient client = new SarlaccClient(authClientId,authClientPassword,authUrlToken,authUrlUser);
                         User user = null;
+                        
                         try {
                             user = client.getUserDetails(token);
                         } catch (HttpClientErrorException hcee){

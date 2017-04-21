@@ -33,22 +33,22 @@ public class SarlaccClientTest {
 
     @Test (expected = IllegalArgumentException.class)
     public void createBadClientNoClientId(){
-        SarlaccClient client = new SarlaccClient(null,CLIENT_SECRET,TOKEN_URL,USER_URL);
+        new SarlaccClient(null,CLIENT_SECRET,TOKEN_URL,USER_URL);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void createBadClientNoClientSecret(){
-        SarlaccClient client = new SarlaccClient(CLIENT_ID,null,TOKEN_URL,USER_URL);
+        new SarlaccClient(CLIENT_ID,null,TOKEN_URL,USER_URL);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void createBadClientNoTokenUrl(){
-        SarlaccClient client = new SarlaccClient(CLIENT_ID,CLIENT_SECRET,null,USER_URL);
+        new SarlaccClient(CLIENT_ID,CLIENT_SECRET,null,USER_URL);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void createBadClientNoUserUrl(){
-        SarlaccClient client = new SarlaccClient(CLIENT_ID,CLIENT_SECRET,TOKEN_URL,null);
+        new SarlaccClient(CLIENT_ID,CLIENT_SECRET,TOKEN_URL,null);
     }
 
     @Test
@@ -58,7 +58,8 @@ public class SarlaccClientTest {
         assertEquals(ENCODED_CLIENT_INFO,client.getEncodedClientInfo());
     }
 
-    @Test
+    @SuppressWarnings("unchecked")
+	@Test
     public void testGetUserToken(){
         SarlaccClient client = spy(new SarlaccClient(CLIENT_ID,CLIENT_SECRET,TOKEN_URL,USER_URL));
 
@@ -71,7 +72,8 @@ public class SarlaccClientTest {
         verify(client).sendRequest(any(RestTemplate.class),eq(TOKEN_URL), eq(HttpMethod.POST), any(HttpEntity.class), eq(Token.class));
     }
 
-    @Test
+    @SuppressWarnings("unchecked")
+	@Test
     public void testGetUserDetails(){
         SarlaccClient client = spy(new SarlaccClient(CLIENT_ID,CLIENT_SECRET,TOKEN_URL,USER_URL));
 
