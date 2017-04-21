@@ -1,19 +1,18 @@
 package com.mattvoget.sarlacc.client;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.mattvoget.sarlacc.models.Token;
-import com.mattvoget.sarlacc.models.User;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-
-import javax.management.relation.Role;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.mattvoget.sarlacc.models.Token;
+import com.mattvoget.sarlacc.models.User;
 
 
 public class SarlaccUserService {
