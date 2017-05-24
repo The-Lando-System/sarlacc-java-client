@@ -1,77 +1,48 @@
 package com.mattvoget.sarlacc.client;
 
 
-import com.mattvoget.sarlacc.models.Token;
-import com.mattvoget.sarlacc.models.User;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+
+import com.mattvoget.sarlacc.models.AppRole;
+import com.mattvoget.sarlacc.models.Token;
+import com.mattvoget.sarlacc.models.User;
 
 public class SarlaccClient {
 
     private Logger log = LoggerFactory.getLogger(SarlaccClient.class);
 
-    private String clientId;
-    private String clientSecret;
+    private static final String TOKEN_ENDPOINT = "/oauth/token";
+    private static final String USER_ENDPOINT = "/user-details";
+    private static final String APPROLE_ENDPOINT = "/app-role";
+    
     private String encodedClientInfo;
-    private String tokenUrl;
-    private String userUrl;
+    private String sarlaccUrl;
+    
+    public SarlaccClient(String clientId, String clientSecret, String sarlaccUrl) {
+    	
+    	if (StringUtils.isBlank(clientId))
+    		throw new IllegalArgumentException("No client ID provided!");
+    	
+    	if (StringUtils.isBlank(clientSecret))
+    		throw new IllegalArgumentException("No client secret provided!");
 
-    public SarlaccClient(String clientId, String clientSecret, String tokenUrl, String userUrl) {
-
-        validateClientInput(clientId,"clientId");
-        validateClientInput(clientSecret,"clientSecret");
-        validateClientInput(tokenUrl,"tokenUrl");
-        validateClientInput(userUrl,"userUrl");
-
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
+    	if (StringUtils.isBlank(sarlaccUrl))
+    		throw new IllegalArgumentException("Sarlacc URL is not provided!");
+    	
         this.encodedClientInfo = base64Encode(String.format("%s:%s",clientId,clientSecret));
-        this.tokenUrl = tokenUrl;
-        this.userUrl = userUrl;
-    }
-
-    void validateClientInput(String str, String varName){
-        log.debug(String.format("Validating client inputs: %s, %s", str, varName));
-        String msg = "Failed to initialize a Sarlacc Client! Reason: %s";
-        if (StringUtils.isBlank(str)){
-            throw new IllegalArgumentException(String.format(msg,String.format("Received no input for the following variable: %s", varName)));
-        }
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getClientSecret() {
-        return clientSecret;
-    }
-
-    public void setClientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
-    }
-
-    public String getTokenUrl() {
-        return tokenUrl;
-    }
-
-    public void setTokenUrl(String tokenUrl) {
-        this.tokenUrl = tokenUrl;
-    }
-
-    public String getUserUrl() {
-        return userUrl;
-    }
-
-    public void setUserUrl(String userUrl) {
-        this.userUrl = userUrl;
+        this.sarlaccUrl = sarlaccUrl;
     }
 
     public String getEncodedClientInfo() {
@@ -83,6 +54,9 @@ public class SarlaccClient {
     }
 
     public Token getUserToken(String username, String password, String grantType){
+    	
+    	String tokenUrl = this.sarlaccUrl + TOKEN_ENDPOINT;
+    	
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
 
@@ -93,12 +67,15 @@ public class SarlaccClient {
 
         HttpEntity<String> entity = new HttpEntity<String>(requestBody,headers);
 
-        log.debug(String.format("Sending request to get a user token: url=%s",  getTokenUrl()));
+        log.debug(String.format("Sending request to get a user token: url=%s",  tokenUrl));
 
-        return (Token) sendRequest(restTemplate, getTokenUrl(), HttpMethod.POST, entity, Token.class);
+        return (Token) sendRequest(restTemplate, tokenUrl, HttpMethod.POST, entity, Token.class);
     }
 
     public User getUserDetails(Token token){
+    	
+    	String userUrl = this.sarlaccUrl + USER_ENDPOINT;
+    	
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
 
@@ -106,24 +83,48 @@ public class SarlaccClient {
 
         HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 
-        log.debug(String.format("Sending request to get user details: url=%s",  getUserUrl()));
+        log.debug(String.format("Sending request to get user details: url=%s",  userUrl));
 
-        return (User) sendRequest(restTemplate, getUserUrl(),HttpMethod.GET, entity, User.class);
+        User user = (User) sendRequest(restTemplate, userUrl,HttpMethod.GET, entity, User.class);
+        user.setToken(token);
+        
+        List<AppRole> appRoles = getUserAppRoles(user);
+        user.setAppRoles(appRoles);
+        
+        return user;
+    }
+    
+	public List<AppRole> getUserAppRoles(User user){
+    	
+    	String appRoleUrl = this.sarlaccUrl + APPROLE_ENDPOINT;
+    	
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+
+        setAuthHeader(headers, "Bearer", user.getToken().getAccessToken());
+
+        HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+
+        log.debug(String.format("Sending request to get user app roles: url=%s",  appRoleUrl));
+    	
+        AppRole[] appRoles = (AppRole[]) sendRequest(restTemplate, appRoleUrl,HttpMethod.GET, entity, AppRole[].class);
+        
+        return Arrays.asList(appRoles);
     }
 
-    String base64Encode(String strToEncode){
+    private String base64Encode(String strToEncode){
         return new String(Base64.encodeBase64(strToEncode.getBytes()));
     }
 
-    void setAuthHeader(HttpHeaders headers, String authType, String token){
+    private void setAuthHeader(HttpHeaders headers, String authType, String token){
         headers.set("Authorization", String.format("%s %s", authType, token));
     }
 
-    void setContentType(HttpHeaders headers, String contentType){
+    private void setContentType(HttpHeaders headers, String contentType){
         headers.set("Content-Type", contentType);
     }
 
-    Object sendRequest(RestTemplate restTemplate, String url, HttpMethod methodType, HttpEntity<String> entity, Class<?> clazz){
+    private Object sendRequest(RestTemplate restTemplate, String url, HttpMethod methodType, HttpEntity<String> entity, Class<?> clazz){
         ResponseEntity<?> re = restTemplate.exchange(url, methodType, entity, clazz);
         return re.getBody();
     }

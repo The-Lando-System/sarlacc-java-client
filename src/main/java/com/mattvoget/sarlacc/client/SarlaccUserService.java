@@ -21,14 +21,12 @@ public class SarlaccUserService {
 
     public static final String TOKEN_NAME = "x-access-token";
 
-    private String authUrlToken;
-    private String authUrlUser;
+    private String sarlaccUrl;
     private String authClientId;
     private String authClientPassword;
 
-    public SarlaccUserService(String authUrlToken, String authUrlUser, String authClientId, String authClientPassword){
-        this.authUrlToken = authUrlToken;
-        this.authUrlUser = authUrlUser;
+    public SarlaccUserService(String sarlaccUrl, String authClientId, String authClientPassword){
+        this.sarlaccUrl = sarlaccUrl;
         this.authClientId = authClientId;
         this.authClientPassword = authClientPassword;
     }
@@ -45,7 +43,7 @@ public class SarlaccUserService {
                         Token token = new Token();
                         token.setAccessToken(accessToken);
 
-                        SarlaccClient client = new SarlaccClient(authClientId,authClientPassword,authUrlToken,authUrlUser);
+                        SarlaccClient client = new SarlaccClient(authClientId,authClientPassword,sarlaccUrl);
                         User user = null;
                         
                         try {
