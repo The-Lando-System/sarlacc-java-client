@@ -96,7 +96,7 @@ public class SarlaccClient {
     
 	public List<AppRole> getUserAppRoles(User user){
     	
-    	String appRoleUrl = this.sarlaccUrl + APPROLE_ENDPOINT;
+    	String appRoleUrl = this.sarlaccUrl + APPROLE_ENDPOINT + user.getUsername() + "/";
     	
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
