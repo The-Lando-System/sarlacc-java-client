@@ -25,7 +25,7 @@ public class SarlaccClient {
 
     private static final String TOKEN_ENDPOINT = "/oauth/token";
     private static final String USER_ENDPOINT = "/user-details";
-    private static final String APPROLE_ENDPOINT = "/app-role";
+    private static final String APPROLE_ENDPOINT = "/app-role/";
     
     private String encodedClientInfo;
     private String sarlaccUrl;
