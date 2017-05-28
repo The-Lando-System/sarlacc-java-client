@@ -67,9 +67,7 @@ public class SarlaccClient {
 
         HttpEntity<String> entity = new HttpEntity<String>(requestBody,headers);
 
-        log.debug(String.format("Sending request to get a user token: url=%s",  tokenUrl));
-
-        return (Token) sendRequest(restTemplate, tokenUrl, HttpMethod.POST, entity, Token.class);
+        return (Token) sendRequest("Get Token", restTemplate, tokenUrl, HttpMethod.POST, entity, Token.class);
     }
 
     public User getUserDetails(Token token){
@@ -83,9 +81,7 @@ public class SarlaccClient {
 
         HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 
-        log.debug(String.format("Sending request to get user details: url=%s",  userUrl));
-
-        User user = (User) sendRequest(restTemplate, userUrl,HttpMethod.GET, entity, User.class);
+        User user = (User) sendRequest("Get User Details", restTemplate, userUrl,HttpMethod.GET, entity, User.class);
         user.setToken(token);
         
         List<AppRole> appRoles = getUserAppRoles(user);
@@ -104,10 +100,8 @@ public class SarlaccClient {
         setAuthHeader(headers, "Bearer", user.getToken().getAccessToken());
 
         HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-
-        log.debug(String.format("Sending request to get user app roles: url=%s",  appRoleUrl));
     	
-        AppRole[] appRoles = (AppRole[]) sendRequest(restTemplate, appRoleUrl,HttpMethod.GET, entity, AppRole[].class);
+        AppRole[] appRoles = (AppRole[]) sendRequest("Get App Roles", restTemplate, appRoleUrl,HttpMethod.GET, entity, AppRole[].class);
         
         return Arrays.asList(appRoles);
     }
@@ -124,9 +118,13 @@ public class SarlaccClient {
         headers.set("Content-Type", contentType);
     }
 
-    private Object sendRequest(RestTemplate restTemplate, String url, HttpMethod methodType, HttpEntity<String> entity, Class<?> clazz){
+    private Object sendRequest(String action, RestTemplate restTemplate, String url, HttpMethod methodType, HttpEntity<String> entity, Class<?> clazz){
+    	
+    	if (log.isDebugEnabled())
+    		log.debug(String.format("Sending request to Sarlacc: action=[%s] url=[%s] method=[%s] return=[%s]", action, url, methodType.toString(), clazz.getSimpleName()));
+    	    	
         ResponseEntity<?> re = restTemplate.exchange(url, methodType, entity, clazz);
         return re.getBody();
     }
-
+    
 }

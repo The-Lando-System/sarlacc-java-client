@@ -17,9 +17,9 @@ public class SarlaccUserFilter implements Filter{
 
     private Logger log = LoggerFactory.getLogger(SarlaccUserFilter.class);
 
-    private SarlaccUserService sarlaccUserService;
+    private SarlaccUserServiceImpl sarlaccUserService;
 
-    public SarlaccUserFilter(SarlaccUserService sarlaccUserService) {
+    public SarlaccUserFilter(SarlaccUserServiceImpl sarlaccUserService) {
         this.sarlaccUserService = sarlaccUserService;
     }
 
@@ -30,7 +30,7 @@ public class SarlaccUserFilter implements Filter{
         HttpServletResponseWrapper wrapper = new HttpServletResponseWrapper((HttpServletResponse) servletResponse);
 
         // Check for the x-access-token header
-        String accessToken = ((HttpServletRequest) servletRequest).getHeader(SarlaccUserService.TOKEN_NAME);
+        String accessToken = ((HttpServletRequest) servletRequest).getHeader(SarlaccUserServiceImpl.TOKEN_NAME);
         if (accessToken == null) {
             wrapper.sendError(HttpStatus.BAD_REQUEST.value(),"No x-access-token header provided in the request");
             return;
